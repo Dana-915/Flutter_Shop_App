@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../models/product.dart';
-import 'products_list_screen.dart';
-import 'product_details_screen.dart';
+import '../../models/product.dart';
+import '../product_details/product_details_screen.dart';
+import '../products_list/products_list_screen.dart';
 
 class ProductsGridScreen extends StatelessWidget {
   const ProductsGridScreen({Key? key}) : super(key: key);
@@ -10,57 +10,58 @@ class ProductsGridScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Shop Products'),
+        title: const Text('Products'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.list),
+            icon: const Icon(Icons.grid_view),
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => const ProductsListScreen()),
+                MaterialPageRoute(
+                  builder: (context) => const ProductsListScreen(),
+                ),
               );
             },
           ),
         ],
       ),
       body: GridView.builder(
-        padding: const EdgeInsets.all(10),
-        itemCount: dummyProducts.length,
+        padding: const EdgeInsets.all(16),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 3 / 4,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
+          childAspectRatio: 0.75,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
         ),
-        itemBuilder: (ctx, i) {
-          final product = dummyProducts[i];
+        itemCount: dummyProducts.length,
+        itemBuilder: (context, index) {
+          final product = dummyProducts[index];
           return GestureDetector(
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => ProductDetailsScreen(product: product),
+                  builder: (context) => ProductDetailsScreen(product: product),
                 ),
               );
             },
             child: Card(
-              elevation: 3,
+              elevation: 2,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-                      child: Image.network(
-                        product.imageUrl,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        errorBuilder: (ctx, err, stack) => Container(
-                          color: Colors.grey[200],
-                          child: const Icon(Icons.broken_image, size: 50, color: Colors.grey),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(12),
+                        ),
+                        image: DecorationImage(
+                          image: NetworkImage(product.imageUrl),
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
@@ -78,8 +79,11 @@ class ProductsGridScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '\$${product.price.toStringAsFixed(2)}',
-                          style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                          '\$${product.price}',
+                          style: const TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),
